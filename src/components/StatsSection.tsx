@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Database, Users, Trophy } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface StatItemProps {
   icon: React.ReactNode;
@@ -7,12 +8,15 @@ interface StatItemProps {
   label: string;
   suffix?: string;
   delay: number;
+  isLoading: boolean;
 }
 
-const StatItem = ({ icon, value, label, suffix = "", delay }: StatItemProps) => {
+const StatItem = ({ icon, value, label, suffix = "", delay, isLoading }: StatItemProps) => {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
+    if (isLoading) return;
+    
     const timer = setTimeout(() => {
       const duration = 2000;
       const steps = 60;
@@ -33,7 +37,7 @@ const StatItem = ({ icon, value, label, suffix = "", delay }: StatItemProps) => 
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [value, delay]);
+  }, [value, delay, isLoading]);
 
   return (
     <div 
@@ -46,7 +50,7 @@ const StatItem = ({ icon, value, label, suffix = "", delay }: StatItemProps) => 
         </div>
       </div>
       <div className="stat-number mb-2">
-        {count.toLocaleString()}{suffix}
+        {isLoading ? "..." : count.toLocaleString()}{!isLoading && suffix}
       </div>
       <p className="text-muted-foreground text-sm md:text-base font-medium">
         {label}
@@ -56,26 +60,55 @@ const StatItem = ({ icon, value, label, suffix = "", delay }: StatItemProps) => 
 };
 
 const StatsSection = () => {
-  // Placeholder data - replace with actual API calls when connected
-  const stats = [
+  const [stats, setStats] = useState({ chats: 0, users: 0, rankings: 0 });
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('get-mongodb-stats');
+        
+        if (error) {
+          console.error('Error fetching stats:', error);
+          return;
+        }
+        
+        if (data) {
+          setStats({
+            chats: data.chats || 0,
+            users: data.users || 0,
+            rankings: data.rankings || 0,
+          });
+        }
+      } catch (err) {
+        console.error('Failed to fetch stats:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
+  const statItems = [
     {
       icon: <Database className="w-6 h-6 text-primary" />,
-      value: 15420,
-      label: "Total Chats",
+      value: stats.chats,
+      label: "Chats_DB",
       suffix: "+",
       delay: 0,
     },
     {
       icon: <Users className="w-6 h-6 text-primary" />,
-      value: 8750,
-      label: "Active Users",
+      value: stats.users,
+      label: "User_DB",
       suffix: "",
       delay: 200,
     },
     {
       icon: <Trophy className="w-6 h-6 text-primary" />,
-      value: 2340,
-      label: "Ranked Players",
+      value: stats.rankings,
+      label: "user_ranking",
       suffix: "",
       delay: 400,
     },
@@ -89,13 +122,13 @@ const StatsSection = () => {
           Database Stats
         </h2>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Real-time statistics from our MongoDB database
+          Real-time statistics from MongoDB database
         </p>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {stats.map((stat, index) => (
-          <StatItem key={index} {...stat} />
+        {statItems.map((stat, index) => (
+          <StatItem key={index} {...stat} isLoading={isLoading} />
         ))}
       </div>
     </section>

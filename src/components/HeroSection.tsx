@@ -13,10 +13,9 @@ const HeroSection = () => {
         </div>
         
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 animate-slide-up">
-          <span className="text-foreground">PCG </span>
-          <span className="gradient-text">Cricket</span>
+          <span className="gradient-text">PCG Group</span>
           <br />
-          <span className="text-foreground">Gaming</span>
+          <span className="text-foreground">Cricket Gaming</span>
         </h1>
         
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up" style={{ animationDelay: "200ms" }}>
