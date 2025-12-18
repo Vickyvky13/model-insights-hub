@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -41,14 +46,6 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-          coral: "hsl(var(--accent-coral))",
-          cyan: "hsl(var(--accent-cyan))",
-          violet: "hsl(var(--accent-violet))",
-          emerald: "hsl(var(--accent-emerald))",
-          amber: "hsl(var(--accent-amber))",
-          rose: "hsl(var(--accent-rose))",
-          sky: "hsl(var(--accent-sky))",
-          lime: "hsl(var(--accent-lime))",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -83,21 +80,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "scale-in": {
-          from: { transform: "scale(0.95)", opacity: "0" },
-          to: { transform: "scale(1)", opacity: "1" },
-        },
       },
       animation: {
-        "accordion-down": "accordion-down 0.3s ease-out",
-        "accordion-up": "accordion-up 0.3s ease-out",
-        "scale-in": "scale-in 0.2s ease-out",
-      },
-      boxShadow: {
-        glass: "0 8px 32px rgba(100, 80, 150, 0.1)",
-        "glass-hover": "0 12px 40px rgba(100, 80, 150, 0.15)",
-        card: "0 4px 20px rgba(100, 80, 150, 0.08)",
-        "card-hover": "0 8px 30px rgba(100, 80, 150, 0.12)",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
